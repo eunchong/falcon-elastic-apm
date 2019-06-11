@@ -20,7 +20,6 @@ class ElasticApmMiddleware(object):
         result = {
             "method": request.method,
             "remote_addr": request.remote_addr,
-            "relative_uri": request.relative_uri,
             "forwarded_uri": request.forwarded_uri,
             "host": request.host,
             "app": request.app,
@@ -38,7 +37,6 @@ class ElasticApmMiddleware(object):
         and allows you to read bytes from the request body.
         See also: PEP 3333
         """
-
         self.client.begin_transaction('web.falcon')
 
         context = {}
@@ -48,5 +46,4 @@ class ElasticApmMiddleware(object):
         elasticapm.set_custom_context(context)
 
     def process_response(self, req, resp, resource, req_succeeded):
-
-        self.client.end_transaction(req.relative_uri, 'success')
+        self.client.end_transaction(req.path, 'success')
